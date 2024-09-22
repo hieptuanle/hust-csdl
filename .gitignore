@@ -1,0 +1,32 @@
+# LaTeX build files
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.toc
+
+# LaTeX output files
+*.pdf
+*.dvi
+*.ps
+
+# LaTeX editor files
+*.synctex.gz
+*.synctex.gz(busy)
+*.synctex.gz(busy)*
+*.fdb_latexmk
+*.fls
+*.lof
+*.lot
+*.lol
+*.loa
+*.lox
+*.glo
+*.gls
+*.ist
+*.acn
+*.acr
+*.alg
+*.glg
+*.glsdefs

@@ -1,0 +1,152 @@
+\documentclass{article}
+
+% Use package to support utf8 and vietnamese
+\usepackage[utf8]{vietnam}
+
+% Add package for multiple authors
+\usepackage{authblk}
+\usepackage{amsmath}
+
+\begin{document}
+	\title{Bài tập nhóm môn CSDL - Xây dựng CSDL quản lý thông tin nhà cung cấp}
+	\author{Lại Ngọc Dung}
+	\author{Lê Tuấn Hiệp}
+	\author{Nguyễn Hồng Lĩnh}
+	\author{Nguyễn Tùng Lộc}
+	\author{Trần Quang Lâm}
+	\affil{Trường Đại học Bách khoa Hà Nội}
+
+	\date{Tháng 9 năm 2024}
+	\maketitle
+
+	\section{Danh sách các nghiệp vụ}
+
+	Phần dưới đây liệt kê các nghiệp vụ và các lệnh làm việc với CSDL liên quan
+	đến nghiệp vụ đó.
+
+	\subsection{Ký kết và quản lý hợp đồng}
+
+	\subsubsection{Theo dõi tiến độ kí kết các hợp đồng}
+	\begin{itemize}
+		\item Nhân viên mua hàng tạo và chịu trách nhiệm theo dõi tiến độ kí kết các
+			hợp đồng
+			\begin{itemize}
+				\item Liệt kê danh sách các hợp đồng đang được phụ trách bởi người dùng
+        đồng thời hiển thị thông tin của nhà cung cấp
+				\item Kiểm tra phòng ban của người dùng (xem có phải là phòng mua hàng
+					hay không thì mới được tạo hợp đồng)
+			\end{itemize}
+
+		\item Giám đốc mua hàng, Giám đốc hành chính pháp lý, Giám đốc tài chính duyệt
+			hợp đồng
+			\begin{itemize}
+				\item Tìm kiếm 1 hợp đồng theo mã hợp đồng (để cập nhật thông tin hợp
+					đồng)\\
+					$\Pi_{MaHopDong}(\sigma_{\textit{MaHopDong=input\_id}}(\textit{HopDong}))$
+			\end{itemize}
+
+		\item Nhân viên mua hàng kiểm tra thời hạn và gia hạn các hợp đồng đã hết hạn
+			\begin{itemize}
+				\item Liệt kê danh sách các hợp đồng đã hết hạn
+					\newline
+					$\sigma_{\text{ThoiHanHopDong} \le \text{current\_date}}(\text{HopDong}
+					)$
+			\end{itemize}
+
+		  \subsubsection{Xét duyệt hợp đồng}
+
+		\item Giám đốc mua hàng, Giám đốc pháp lý, Giám đốc tài chính duyệt hợp đồng
+			\begin{itemize}
+				\item Liệt kê danh sách các hợp đồng ở trạng thái chờ duyệt mà người dùng
+					chưa duyệt\\
+					$\sigma_{\text{NguoiDung=user\_id} \wedge \text{TrangThai=}\textit{'ChoDuyet'}}
+					(\text{HopDong})$
+
+				\item Kiểm tra người dùng có phải là Giám đốc mua hàng, Giám đốc pháp lý,
+					Giám đốc tài chính hay không\\
+					$\Pi_{\text{TenPhongBan}}(\sigma_{\text{MaNV=user\_id}}(\text{Nhanvien}
+					))$
+
+				\item Liệt kê danh sách tất cả các hợp đồng đã được duyệt (để các giám
+					đốc kiểm tra, theo dõi)\\ $\sigma_{\text{TrangThai=}\textit{'DaDuyet'}}
+					(\text{HopDong})$
+			\end{itemize}
+
+		\item Hợp đồng được kí thành công sẽ được nhân viên mua hàng đính kèm link file
+			hợp đồng
+			\begin{itemize}
+				\item Liệt kê danh sách các hợp đồng đã được duyệt mà chưa có link file hợp
+					đồng
+					\newline
+					$\Pi_{\text{HopDong,TrangThai}}(\sigma_{\text{TrangThai} = \textit{'DaDuyet'}
+					\wedge \text{LinkHopDong} \text{ IS NULL}}(\text{HopDong}))$
+			\end{itemize}
+	\end{itemize}
+	\subsection{Quản lý đơn đặt hàng}
+	\subsubsection{Theo dõi thông tin và tình trạng đơn đặt hàng}
+	\begin{itemize}
+		\item Nhân viên mua hàng theo dõi các đơn đặt hàng do mình phụ trách (Purchase
+			Order), có thông tin của nhà cung cấp, sản phẩm v.v.
+			\begin{itemize}
+				\item Liệt kê danh sách các nhà cung cấp đang có hợp đồng còn hạn (để
+					gợi ý khi điền nhà cung cấp)\\
+					$\Pi_{\text{NhaCungCap}}(\sigma_{\text{ThoiHanHopDong} >
+					\text{Current\_Date}}(\text{HopDong}))$
+			\end{itemize}
+
+		\item Nhân viên mua hàng tiến hành mua hàng, cập nhật trạng thái đơn hàng về
+			kho thành chờ thanh toán
+			\begin{itemize}
+				\item Liệt kê danh sách các đơn đặt hàng ở trạng thái Đã duyệt (để tiến
+					hành đặt hàng, cập nhật thành trạng thái "Đã đặt hàng") \\
+					$\sigma_{\text{TrangThai} = \textit{'DaDuyet'}}(\text{DonDatHang})$
+
+				\item Liệt kê danh sách các đơn đặt hàng ở trạng thái "Đã đặt hàng" (để
+					kiểm tra đã về hàng chưa, lúc này hệ thống tự động cập nhật trạng thái
+					thành "Chờ thanh toán")
+					\newline
+					$\sigma_{\text{TrangThai} = \textit{'DaDatHang'}}(\text{DonDatHang})$
+			\end{itemize}
+
+		\item Nhân viên kế toán kiểm tra các đơn đã về hàng để thanh toán
+			\begin{itemize}
+				\item Liệt kê danh sách các đơn đặt hàng ở trạng thái "Chờ thanh toán" $\sigma
+					_{\text{TrangThai} = \textit{'ChoThanhToan'}}(\text{DonDatHang})$
+			\end{itemize}
+			\subsubsection{Phê duyệt đơn đặt hàng}
+
+		\item Giám đốc mua hàng duyệt đơn đặt hàng
+			\begin{itemize}
+				\item Liệt kê danh sách các đơn đặt hàng chưa được duyệt\\
+					$\sigma_{\text{TrangThai} = \textit{'ChoDuyet'}}(\text{DonDatHang})$
+			\end{itemize}
+			Sau khi đơn hàng được phê duyệt, Đơn đặt hàng sẽ tự động chuyển về trạng
+			thái "Đã Duyệt" và được Nhân viên mua hàng xử lý ở bước bên trên.
+	\end{itemize}
+	\subsection{Quản lý thanh toán}
+	\subsubsection{Tạo yêu cầu thanh toán}
+	\begin{itemize}
+		\item Kế toán kiểm tra các đơn đặt hàng "Chờ thanh toán" để tạo Yêu cầu thanh
+			toán
+			\begin{itemize}
+				\item Liệt kê danh sách các đơn đặt hàng ở trạng thái "Chờ thanh toán"\\
+					$\sigma_{\text{TrangThai} = \textit{ChoThanhToan}}(\text{DonDatHang}))$
+			\end{itemize}
+			\subsubsection{Phê duyệt và thanh toán}
+
+		\item Thủ quỹ duyệt Yêu cầu thanh toán
+			\begin{itemize}
+				\item Liệt kê danh sách các Yêu cầu thanh toán chưa được duyệt\\
+					$\sigma_{\text{TrangThai} = \textit{ChoThanhToan}}(\text{YeuCauThanhToan}
+					))$
+			\end{itemize}
+
+		\item Thủ quỹ chuyển tiền theo Yêu cầu thanh toán, đính kèm link file scan
+			chứng từ ủy nhiệm chi/phiếu chi/lệnh chuyển khoản, và đánh dấu Yêu cầu thanh
+			toán đã hoàn tất
+			\begin{itemize}
+				\item Liệt kê danh sách các Yêu cầu thanh toán đã được duyệt\\
+					$\sigma_{\text{TrangThai} = \textit{DaDuyet}}(\text{YeuCauThanhToan}))$
+			\end{itemize}
+	\end{itemize}
+\end{document}
