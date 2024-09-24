@@ -88,6 +88,7 @@ CREATE TABLE NhanVienDuyetHopDong (
 CREATE TABLE DonDatHangSanPham (
     MaDonDatHang INT,
     MaSanPham INT,
+    GiaNhap DECIMAL(18, 2),
     SoLuongDatHang INT,
     SoLuongThucTe INT,
     ThoiGianGiaoHangThucTe DATE,
